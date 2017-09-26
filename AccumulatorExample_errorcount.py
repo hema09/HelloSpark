@@ -1,14 +1,14 @@
 from pyspark import SparkContext, SparkConf
 import re
 
-conf = SparkConf.setAppName("ErrorCount")
+conf = SparkConf().setAppName("ErrorCount")
 sc = SparkContext(conf=conf)
 
 validSign = sc.accumulator(0)
 invalidSign = sc.accumulator(0)
 blankLine = sc.accumulator(0)
 
-file = sc.textFile("hdfs:///tmp/jsonsample.txt")
+file = sc.textFile("hdfs:///tmp/callsigns")
 
 
 def extractCallSign(line):
@@ -30,6 +30,7 @@ def validCallSign(sign):
 
 validSigns = callSigns.filter(validCallSign)
 
+# contactCount will now contain map of <sign, count>
 contactCount = validSigns.map(lambda sign: (sign, 1)).reduceByKey(lambda (x,y) : x + y)
 
 contactCount.count() # force evaluation

@@ -17,3 +17,8 @@ print input.collect()
 input.map(lambda x: json.dumps(x)).saveAsTextFile("hdfs:///tmp/jsonsampleoutput")
 
 
+ip = sc.textFile("hdfs:///tmp/jsonsample.txt")
+input = input.map(lambda x: json.load(x))
+
+input.map(lambda x: json.dumps(x)).saveAsTextFile("hdfs:///tmp/jsonoutput")
+
